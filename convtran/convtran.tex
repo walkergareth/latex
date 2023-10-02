@@ -1,0 +1,454 @@
+%% convtran.tex
+%% Copyright 2023 Gareth Walker
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+% 
+% The Current Maintainer of this work is Gareth Walker.
+%
+% This work consists of the files convtran.sty and convtran.tex.
+
+\documentclass[a4paper]{article}
+\usepackage[toc]{multitoc}
+\renewcommand*{\multicolumntoc}{2}
+\setlength{\columnseprule}{0.5pt}
+\usepackage{hyperref}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{convtran}
+\begin{document}
+\title{convtran.sty}
+\author{Gareth Walker}
+\maketitle
+\tableofcontents
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0em}
+
+\section{Introduction}
+
+\verb!convtran.sty! is intended to simplify the presentation of
+transcriptions of conversation with \LaTeX.  It does this primarily
+through a modified list environment, supplemented by a palette of
+commands for the user to adjust the trancriptions according to the
+precise circumstances in which the package is being used.
+
+Caveat: this documentation is only intended to give an overview of the
+package, and outline its main features; see also the package itself
+for comments on the functions.
+
+\section{Some examples}
+
+\subsection{A simple example}
+\begin{convtran}
+  \turn{Bob:} Hello Jim. \hl
+  \turn{Jim:} Hello Bob.
+\end{convtran}
+\noindent The above example was created with this:
+\begin{verbatim}
+\begin{convtran}
+  \turn{Bob:} Hello Jim. \hl
+  \turn{Jim:} Hello Bob.
+\end{convtran}
+\end{verbatim}
+
+\subsection{A more complicated example}
+\begin{convtran}
+  \turn{D:} O:h (I k-)=
+  \turn{A:} =Dz that make any sense to you?
+  \turn{C:} Mn mh. I don’ even know who she is.
+  \turn{A:} She’s that’s, the Sister Kerrida, [who,
+  \turn{D:} ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[.hhh
+  \turn{D:} Oh [\underline{that’s} the one you to:ld [me you bought
+  \turn{C:} ~~~[Oh-~~~~~~~~~~~~~~~~~~~~~~[
+  \turn{A:} ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[\underline{Ye:h}
+\end{convtran}
+This is the code required:
+\begin{verbatim}
+\begin{convtran}
+  \turn{D:} O:h (I k-)=
+  \turn{A:} =Dz that make any sense to you?
+  \turn{C:} Mn mh. I don’ even know who she is.
+  \turn{A:} She’s that’s, the Sister Kerrida, [who,
+  \turn{D:} ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[.hhh
+  \turn{D:} Oh [\underline{that’s} the one you to:ld [me you bought
+  \turn{C:} ~~~[Oh-~~~~~~~~~~~~~~~~~~~~~~[
+  \turn{A:} ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[\underline{Ye:h}
+\end{convtran}
+\end{verbatim}
+Note that the overlapping talk has to be aligned manually using spaces
+(\verb!~!) or commands like \verb!\hspace{3em}! or \verb!\hphantom{Oh }!.
+
+\subsection{Numbered examples}
+You can use a package like \verb!gb4e! to provide numbered examples:
+\begin{verbatim}
+(...)
+\usepackage{gb4e}
+(...)
+\begin{exe}
+  \ex An example
+  \begin{convtran}
+    \turn{Bob:} Hello Jim. \hl
+    \turn{Jim:} Hello Bob.
+  \end{convtran}
+\end{exe}
+\end{verbatim}
+
+\subsection{Line breaks}
+One major benefit of this package, being based on the \verb!list!
+environment, is that line breaking is handled automatically.  The
+following has only two \verb!turn! commands:
+\begin{convtran}
+\turn{Bob:} This is a test to see how long I should talk for to get
+onto the next line. Seems I have to talk for longer than I expected.
+\turn{Jim:} This is also a test of the same thing, Bob my old
+mate. I'll continue for a bit longer, just to make sure.
+\end{convtran}
+\begin{verbatim}
+\begin{convtran}
+  \turn{Bob:} This is a test to see how long I should talk for to get
+  onto the next line. Seems I have to talk for longer than I expected.
+  \turn{Jim:} This is also a test of the same thing, Bob my old
+  mate. I'll continue for a bit longer, just to make sure.
+\end{convtran}
+\end{verbatim}
+
+To insert line breaks manually try \verb!\\!:
+\begin{convtran}
+  \turn{Bob:} This is a test to see how long I should talk\\for to get
+  onto the next line. Seems I have\\to talk for longer than I expected.
+  \turn{Jim:} This is also a test of the same thing,\\Bob my old
+  mate. I'll continue for a bit\\ longer, just to make sure.
+\end{convtran}
+\begin{verbatim}
+\begin{convtran}
+  \turn{Bob:} This is a test to see how long I should talk\\for to get
+  onto the next line. Seems I have\\to talk for longer than I expected.
+  \turn{Jim:} This is also a test of the same thing,\\Bob my old
+  mate. I'll continue for a bit\\ longer, just to make sure.
+\end{convtran}
+\end{verbatim}
+Manual line breaks can be useful when aligning talk in overlap.
+
+\subsection{Referring to lines by number}
+
+You can use the \verb!\linelabel! command provided by the \verb!lineno! package, or the shorthand \verb!\lab!. This code:
+\begin{verbatim}
+\begin{convtran}
+  \turn{Bob:} Hello Jim.\linelabel{bob}
+  \turn{Jim:} Hello Bob.\lab{jim}
+\end{convtran}
+First is line~\ref{bob}, followed by line~\ref{jim}.
+\end{verbatim}
+produces this:
+\begin{convtran}
+  \turn{Bob:} Hello Jim.\linelabel{bob}
+  \turn{Jim:} Hello Bob.\lab{jim}
+\end{convtran}
+First is line~\ref{bob}, followed by line~\ref{jim}.
+
+\section{Adjusting the typesetting}
+
+There are many aspects of the layout which might need fine-tuning in
+order to handle different page layouts, sizes, or even just personal
+preference as to the placement of elements.  The elements are designed
+to be easily manipulated, and while the package defaults are intended
+to be reasonable, more often than not the user will have to specify
+aspects of the layout in the preamble.
+
+There are important dimensions which are adjustable, either on a
+case by case basis, or in the preamble:
+\begin{enumerate}
+  \item placement of arrow, with \verb!\setarrowplace{length}!
+  \item placement of line numbers, with \verb!\setlinenoplace{length}!
+  \item font of main transcription, with \verb!\setconvfont{font}!
+  \item font of labelled arrows with \verb!\setarrowfont{font}!
+  \item font of gloss line, translation line, or information line with
+    \verb!\setglosfont!, \verb!\settranfont!, and \verb!\setinfofont!
+    respectively
+  \item amount speaker label is indented from the left with
+    \verb!\setconvindent{length}!
+  \item width of the speaker label with
+    \verb!\setconvlabelwidth{length}! in the preamble, or a length in
+    square brackets following \verb!\begin{convtran}! to change
+    individual cases
+\end{enumerate}
+  
+So if you wanted to adjust some of the parameters for all cases, you might
+have a preamble which includes this:
+\begin{verbatim}
+\usepackage{convtran}
+\setlinenoplace{1cm}
+\setarrowplace{0cm}
+\setconvindent{2cm}
+\setconvlabelwidth{3cm}
+\setconvfont{\sf}
+\setarrowfont{\tt}
+\end{verbatim}
+If you wanted to change some of the parameters for a smaller number of
+cases (and therefore didn't want to change the defaults for the entire
+document) you might do something like this, which adjusts the
+parameters only for that particular case.
+\begin{verbatim}
+\begin{convtran}[3cm]
+  \setlinenoplace{1cm}
+  \setarrowplace{0cm}
+  \setconvindent{2cm}
+  \setconvfont{\sf}
+  \setarrowfont{\tt}
+  \turn{Bob:} Hello Jim. \hl
+  \turn{Jim:} Hello Bob. \hllab{2.8cm}{A}
+\end{convtran}
+\end{verbatim}
+Both produce this (which is ugly, but it shows the features):
+\begin{convtran}[3cm]
+  \setlinenoplace{1cm}
+  \setarrowplace{0cm}
+  \setconvindent{2cm}
+  \setconvfont{\sf}
+  \setarrowfont{\tt}
+  \turn{Bob:} Hello Jim. \hl
+  \turn{Jim:} Hello Bob. \hllab{2.8cm}{A}
+\end{convtran}
+
+You should bear in mind that trial-and-error will almost certainly
+have to employed to successfully redefine these lengths for a good
+layout.  For instance, you may find that some lengths require positive
+values while others require negative ones.  To give a few clues, bear
+in mind that 
+\begin{itemize}
+\item \verb!linenoplace! and \verb!convindent! are usually negative,
+  and should be tenths of cm (if you are using cms for your lengths);
+\item \verb!setarrowplace! is usually a positive integer (whole number);
+\item the number in [ ] after \verb!\begin{convtran}! (if used) is
+  usually positive but less than 1cm.
+\end{itemize}
+
+To adjust (increase) the right margin, use
+\verb!\setconvrightmargin{length}! in the preamble.
+
+Footnotes are also possible to some degree, by way of this kind of
+coding:\footnote{Note however that the same mechanism for highlighting
+  lines (i.e. $\backslash$\texttt{marginpar}) doesn't seem to be possible;
+  likewise, line numbers disappear.
+    \begin{convtran}[2cm]
+    \setconvindent{1cm}
+    \turn{Bob:} Hello Jim.  
+    \turn{Jim:} Hello Bob.
+    \end{convtran}}
+\begin{verbatim}
+\footnote{\begin{convtran}[2cm]
+          \setconvindent{1cm}
+          \turn{Bob:} Hello Jim.  
+          \turn{Jim:} Hello Bob.
+          \end{convtran}}
+\end{verbatim}
+
+\section{Starting line numbering at values other than 1}
+
+If you want line numbering to start at something other than 1, use
+\verb!\linenumbers[xx]!.  For instance, this
+\begin{verbatim}
+\begin{convtran}
+  \linenumbers[11]
+  \turn{Bob:} Hello Jim. \hl
+  \turn{Jim:} Hello Bob.
+\end{convtran}
+\end{verbatim}
+produces
+\begin{convtran}
+  \linenumbers[11]
+  \turn{Bob:} Hello Jim. \hl
+  \turn{Jim:} Hello Bob.
+\end{convtran}
+
+If you want to continue numbering from where an earlier excerpt ended,
+use \verb!\convtocont! and \verb!\convcont!.  This:
+\begin{verbatim}
+\begin{convtran}
+  \turn{A:} hello
+  \turn{B:} hello
+\end{convtran}\convtocont
+Here is a continuation from where we left off:
+\begin{convtran}\convcont
+  \turn{A:} hello
+  \turn{B:} hello
+\end{convtran}
+\end{verbatim}
+produces this:
+\begin{convtran}
+  \turn{A:} hello
+  \turn{B:} hello
+\end{convtran}\convtocont
+Here is a continuation from where we left off:
+\begin{convtran}\convcont
+  \turn{A:} hello
+  \turn{B:} hello
+\end{convtran}
+Note that \verb!\convtocont! must go after \verb!\end{convtran}!: if
+you put it before, your next line numbers will start with the same
+number as the last line. The command \verb!\convcont! can even be used
+after intervening examples, so long as there hasn't been an
+intervening \verb!\convtocont! command.
+
+You can remember where you were up to in more than one excerpt by
+creating new counters and referring to those e.g. 
+\begin{verbatim}
+\newcounter{endofconvTwo}
+\newcommand{\convtocontTwo}{\setcounter{endofconvTwo}{\thelinenumber}}
+\newcommand{\convcontTwo}{\linenumbers[\theendofconvTwo]}
+\end{verbatim}
+You can then use \verb!\convcontTwo! to recall the new counter, or
+\verb!\convcont! to recall the original one.
+
+\section{Using convtran in a minipage}
+
+(Code provided by Thomas Deacon.)  Line numbering can be preserved by
+using the environment \verb!convtran*! and the commands
+\verb!\turnmini! and \verb!\turnmini*! e.g.
+\begin{verbatim}
+\begin{minipage}{0.4\textwidth}
+  \raggedleft
+  \begin{convtran*}    
+    \turnmini{A:} is this a question
+    \turnmini{B:} is this a response
+    \turnmini{A:} yes
+  \end{convtran*}
+\end{minipage}
+\end{verbatim}
+produces
+\begin{minipage}{0.4\textwidth}
+  \raggedleft
+  \begin{convtran*}    
+    \turnmini{A:} is this a question 
+    \turnmini{B:} is this a response
+    \turnmini{A:} yes
+  \end{convtran*}
+\end{minipage}
+
+A minipage also makes it possible to put transcriptions, with line numbers, into beamer slides e.g.:
+\begin{verbatim}
+\documentclass{beamer}
+\usepackage{convtran}
+\begin{document}
+\begin{frame}
+  \begin{minipage}{\linewidth}
+    \begin{convtran*}[1.2cm]
+      \setlinenoplace{-0.3cm}
+      \setconvindent{0.8cm}
+      \turnmini{A:} when are you going to uh Tenerife? 
+      \turnmini{B:} well I'm going on the February eighth and and
+         then I'll probably be there like two weeks.
+    \end{convtran*}
+  \end{minipage}
+\end{frame}
+\end{document}
+\end{verbatim}
+
+\section{Other commands}
+
+A range of other commands are provided:
+\begin{description}
+\item{\verb!\turn{label}{text}!} for numbered turns at talk
+\item{\verb!\turn*{label}{text}!} for unnumbered turns at talk
+\item{\verb!\phon{label}{text}!} for unnumbered phonetic details
+\item{\verb!\info{label}{text}!} for unnumbered information
+\item{\verb!\glos{label}{text}!} for unnumbered gloss lines
+\item{\verb!\tran{label}{text}!} for unnumbered translation lines
+\end{description}
+Some symbols are also provided:
+\begin{description}
+\item{\verb!\high!} up arrow
+\item{\verb!\low!} down arrow
+\item{\verb!\q!} raised circle
+\item{\verb!\ul{text}!} underlining
+\item{\verb!\hl!} arrow in the margin
+\item{\verb!\Hl!} double arrow in the margin
+\item{\verb!\hllab{XX}{foo}!} labelled arrow in the margin, where
+  \verb!XX! is however far you want to bump along the arrow in order
+  to make space for the label, and \verb!foo! is the label
+\item{\verb!\Hllab{XX}{foo}!} as previous, but with a double arrow
+\item{\verb!\margmark{XX}!} arbitrary margin marks (XX in this case)
+\end{description}
+
+The package can be loaded with the options
+\verb![single/onehalf/double]! to adjust the line spacing.  Default
+(i.e. where no option is loaded) is single.  So, if you wanted double
+line spacing, in your preamble use \verb!\usepackage[double]{convtran}!.
+
+\section{Referring to figures}
+
+You might want to refer to figures, e.g. screenshots.  For this use
+the \verb!\figlab! command.
+\begin{verbatim}
+\begin{convtran}
+  \turn{A:} one two three four
+  \figlabs{}  \figlab{1}~~~~~~~~~\figlab{2}~~~~~~~~
+              \figlab{3}~~~~~~\figlab{4}\vspace*{-5pt}%
+  \turn{B:} this is a test of some labels
+\end{convtran}
+\end{verbatim}
+produces
+\begin{convtran}
+  \turn{A:} one two three four
+  \figlabs{}  \figlab{1}~~~~~~~~~\figlab{2}~~~~~~~~
+              \figlab{3}~~~~~~\figlab{4}\vspace*{-5pt}%
+  \turn{B:} this is a test of some labels
+\end{convtran}
+The \verb!\vspace*{-5pt}! command isn't essential, but it does put the
+arrow a bit closer to the text.  Note that you can use the
+\verb!\ref{}! command inside \verb!\figlab! to refer to a figure.
+
+\section{Known problems}
+
+\begin{itemize}
+\item Using \verb![! at the start of a turn is fatal: use \verb!{[}!.
+\item Using \verb!\hl!, \verb!\lab! \verb!\labhl!, \verb!\textlabhl!
+  at the start of a turn (ie. before any text) is fatal.
+\item The package uses \verb!\marginpar! to highlight lines with an
+  arrow in the margin: this would cause problems for anyone using
+  convtran in a document with \verb!\marginpar! used for other things
+  e.g. users of \verb!classicthesis! and \verb!\todonotes!; if there
+  are problems then the \verb!marginnote! package might help.
+\item \verb!convtran! and \verb!rotating! clash as both define
+  \verb!turn!.  Try this as a workaround:
+\begin{verbatim}
+  \usepackage{rotating}
+  \let\turn\relax
+  \usepackage{convtran}
+\end{verbatim}
+\item \verb!\hl! does not work when using \verb!\convtran*! inside a
+  minipage.  The package
+  \href{https://www.ctan.org/pkg/minipage-marginpar}{minipage-marginpar}
+  might hold out some hope here.
+\item The \href{https://www.ctan.org/pkg/acmart}{acmart} class doesn't
+  seem to respect any repeated manual spaces (\verb!~~!, \verb!~~~!
+  etc.) This applies in all contexts, not just within the
+  \verb!convtran! environment. There are (at least) two ways around
+  this. Where you are using for example \verb!~~~~~~! you could
+  \begin{enumerate}
+  \item Use \verb!\hphantom{xxxxxx}!, i.e. replace each \verb!~! with
+    \verb!x!. \verb!\hphantom! inserts an amount of space equal to the
+    width of the text within the command (good when using a monospaced
+    font).
+  \item Use e.g. \verb!\hspace*{1cm}!. \verb!\hspace!  inserts an
+    amount of space equal to the width specified in it (good when
+    creating transcriptions with variable space fonts).
+  \end{enumerate}
+\item If you use the \verb!\linelabel! or \verb!\lab! commands in a
+  minipage (even if you don't refer to those lines), references later
+  in the document seem to get messed up.
+
+\end{itemize}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

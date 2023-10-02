@@ -1,0 +1,233 @@
+%% convtran.sty
+%% Copyright 2016-2023 Gareth Walker
+
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+% http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+% 
+% This work has the LPPL maintenance status `maintained'.
+% 
+% The Current Maintainer of this work is Gareth Walker.
+% 
+% This work consists of the files convtran.sty and convtran.tex.
+
+\ProvidesPackage{convtran}[2023/09/01 for transcription of conversation]
+\NeedsTeXFormat{LaTeX2e} 
+\RequirePackage{lineno,wasysym,graphicx}
+
+%% This is a very heavily modified version of James Kilfiger's
+%% `play.sty' (by now, it is probably unrecognisable). Outline of
+%% package use: designed to make doing transcriptions of conversation
+%% a bit easier, principally through the definition of new commands
+%% (e.g. \turn, \info, \phon, \glos, \tran) and its interaction with
+%% the lineno.sty package (which is required in order to work). See
+%% convtran.tex for documentation.
+
+%% CHANGES
+
+%% 2022/07/12: added functionality for use in documents using line
+%%   numbering (by % user 'muzimuzhi Z')
+%% 2019/12/08: replaced \tt with \ttfamily
+%% 2019/10/17: added minipage functionality (by Thomas Deacon)
+%% 2016/11/30: tried to reduce the effect of using marginpars for arrows
+%% 2016/05/04: added code to allow numbering to be resumed
+%% 2012/01/18: added code to do figure labels above relevant lines
+%% 2010/01/19: added \setconvrightmargin{} functionality to allow
+%% length to be added to the right margin of transcriptions
+%% 2009/07/08: changed some \samepage commands to \nopagebreak due to
+%% broken page breaking when using \phon{}, \info{} etc
+
+%%%%% the convtran environment 
+\newenvironment{convtran}[1][\convlabelwidth]{% this last value sets 
+  % the default distance from label to text
+  \def\baselinestretch{\convspacing} % line spacing (single by default)
+  \reversemarginpar               % puts the arrow on the right
+  \@mparswitchfalse               % don't switch sides for arrow:
+  % always on left
+  \flushleft                      % kills justification
+  \frenchspacing                  % stops extra space after period
+  \list{}{                        % modified list environment
+    \linenumbers* \setlength\labelwidth{#1}
+    \addtolength{\rightmargin}{\convrightmargin}
+    \setlength\leftmargin{\labelwidth} \setlength\itemsep{0pt}
+    \setlength\parsep{0pt} \addtolength\leftmargin{-\itemindent}
+    \addtolength\leftmargin{\labelsep}
+    \setlength\listparindent{\itemindent} \let\makelabel=\@CAplaylabel
+    \setlength\topsep{3cm} } } 
+{\endlist}
+
+\newenvironment{convtran*}[1][\convlabelwidth]{% this last value sets 
+  % the default distance from label to text
+  \def\baselinestretch{\convspacing} % line spacing (single by default)
+  \reversemarginpar               % puts the arrow on the right
+  \@mparswitchfalse               % don't switch sides for arrow:
+  % always on left
+  \flushleft                      % kills justification
+  \frenchspacing                  % stops extra space after period
+  \internallinenumbers
+  \list{}{                        % modified list environment
+    \linenumbers* \setlength\labelwidth{#1}
+    \addtolength{\rightmargin}{\convrightmargin}
+    \setlength\leftmargin{\labelwidth} \setlength\itemsep{0pt}
+    \setlength\parsep{0pt} \addtolength\leftmargin{-\itemindent}
+    \addtolength\leftmargin{\labelsep}
+    \setlength\listparindent{\itemindent} \let\makelabel=\@CAplaylabel
+    \setlength\topsep{3cm} } } 
+{\endlist}
+
+%%%%% customizable elements
+\newcommand*{\convfont}{\ttfamily\footnotesize}  % sets fonts
+\newcommand*{\arrowfont}{\ttfamily\footnotesize}
+\newcommand*{\glosfont}{\ttfamily\footnotesize}
+\newcommand*{\tranfont}{\ttfamily\normalfont}
+\newcommand*{\infofont}{\ttfamily\em\footnotesize}
+\newcommand*{\setconvfont}[1]{\renewcommand{\convfont}{#1}}
+\newcommand*{\setarrowfont}[1]{\renewcommand{\arrowfont}{#1}}
+\newcommand*{\setglosfont}[1]{\renewcommand{\glosfont}{#1}}
+\newcommand*{\settranfont}[1]{\renewcommand{\tranfont}{#1}}
+\newcommand*{\setinfofont}[1]{\renewcommand{\infofont}{#1}}
+\newcommand*\turnlabfont{\convfont}     
+\newcommand*{\figlabsfont}{\ttfamily\footnotesize}
+\newdimen\arrowsep
+\setlength\arrowsep{-1.3cm} 
+\newcommand*{\setarrowplace}[1]%
+{\setlength\arrowsep{#1}}
+% \setarrowplace{-1.3cm}
+\newdimen\convindent
+\convindent=1.5cm
+\newcommand*{\setconvindent}[1]{\setlength\convindent{#1}}
+\newdimen\linenumbersep
+\newcommand*{\setlinenoplace}[1]{\setlength\linenumbersep{#1}}
+\setlinenoplace{-0.75cm}              % sets how far in line numbers go
+\renewcommand*{\linenumberfont}{\convfont} % same as main font
+\newdimen\convlabelwidth
+\convlabelwidth=2.3cm
+\newcommand*{\setconvlabelwidth}[1]{\setlength\convlabelwidth{#1}}
+\newdimen\convrightmargin
+\convrightmargin=0cm
+\newcommand*{\setconvrightmargin}[1]{\setlength\convrightmargin{#1}}
+
+\newcommand{\convspacing}{1} % package options for linespacing
+\DeclareOption{single}{\renewcommand\convspacing{1}}
+\DeclareOption{onehalf}{\renewcommand\convspacing{1.5}}
+\DeclareOption{double}{\renewcommand\convspacing{2}}
+\ProcessOptions
+
+% code to allow line numbers for the document to be used as well. By
+% user 'muzimuzhi Z' on stackexchange:
+% https://tex.stackexchange.com/a/647480/110494
+\usepackage{xpatch} % for \xpatchcmd
+\setlength{\linenumbersep}{10pt}
+\newcounter{convtran@start}
+\xpatchcmd\convtran
+  {\linenumbers*}
+  {%
+    \ifLineNumbers
+      \convtran@setMakeLineNumber
+    \else
+      \linenumbers*
+      \convtran@restoreMakeLineNumber
+    \fi
+  }
+  {}{\PatchFailed}
+\newcommand\convtran@setMakeLineNumber{%
+  \let\makeLineNumber@orig=\makeLineNumber
+  \setcounter{convtran@start}{\value{linenumber}}%
+  \renewcommand\makeLineNumber{%
+    \begingroup
+      \setlinenoplace{-0.75cm}%
+      \c@linenumber=\numexpr\c@linenumber-\c@convtran@start+1\relax
+      \hbox to 0pt{\makeLineNumber@orig}% line number for convtran
+    \endgroup
+    \makeLineNumber@orig % normal line number
+  }%
+}
+\newcommand\convtran@restoreMakeLineNumber{%
+  \setlinenoplace{-0.75cm}%
+}
+
+
+%%%%% commands
+\newcommand*{\turn}{%
+  \@ifstar{\turn@star}{\turn@no@star}%
+}
+\newcommand*{\turn@no@star}[1]{%
+  \convfont\item[\hspace*{\convindent}#1]\linenumbers}
+\newcommand*{\turn@star}[1]{%
+  \convfont\item[\hspace*{\convindent}#1]\nolinenumbers}
+\newcommand*{\turnmini}{%
+  \@ifstar{\turnmini@star}{\turnmini@no@star}%
+}
+\newcommand*{\turnmini@no@star}[1]{%
+  \convfont\item[\hspace*{\convindent}#1]\internallinenumbers}
+\newcommand*{\turnmini@star}[1]{%
+  \convfont\item[\hspace*{\convindent}#1]\nolinenumbers}
+\newcommand*{\phon}[1]%      unnumbered phonetics
+{\nopagebreak\convfont\item[\hspace*{\convindent}#1]\nolinenumbers}%
+\newcommand*{\info}[1]%      unnumbered info
+{\infofont\item[\hspace*{\convindent}#1]\nolinenumbers}% 
+\newcommand*{\glos}[1]%      unnumbered glosses
+{\nopagebreak\glosfont\item[\hspace*{\convindent}#1]\nolinenumbers}%
+\newcommand*{\tran}[1]%      unnumbered translation
+{\nopagebreak\tranfont\item[\hspace*{\convindent}#1]\nolinenumbers}%
+\newcommand*\turndelim{}%
+\newcommand*{\@CAplaylabel}[1]{{\convfont#1\turndelim\hfil}}%
+\newcommand*\lab{\linelabel}%           line labels
+\newcommand*{\figlabs}[1]%      unnumbered figure label lines
+{\nopagebreak\figlabsfont\item[\hspace*{\convindent}#1]\nolinenumbers}%
+\newcommand{\figlab}[1]{\begin{minipage}{0cm}%
+    \vspace*{10pt}{\scriptsize\normalfont{\textbf{Fig~#1}}\\%
+      \rotatebox[origin=c]{90}{\hspace*{5pt}$\LHD$}\par}%
+  \end{minipage}}
+
+%%%%% symbols
+% these are loaded outstide the \newenvironmnent command so that
+% they are available in the body of the text for e.g. quoting
+\newcommand*\high{$\uparrow$}      %    high pitch (up arrow)
+\newcommand*\low{$\downarrow$}     %    low pitch (down arrow)
+\newcommand*\q{$^\circ$}           %    start of quiet talk
+\newcommand*\closeq{$^\circ$\ }    %    end of quiet talk
+% \newcommand*\ul{\underline}        %    shorthand for underlining
+\newcommand*\ol{//}                %    the `old fashioned' way to mark
+% onset of overlap
+\newcommand*{\hl}{%                     higlighting arrow
+  \setlength{\marginparpush}{0pt}%
+  \setlength{\marginparsep}{\arrowsep}\marginpar{\hfill$\rightarrow$}}
+\newcommand*{\Hl}{%                     higlighting double arrow
+  \setlength{\marginparpush}{0pt}%
+  \setlength{\marginparsep}{\arrowsep}\marginpar{\hfill$\Rightarrow$}}
+\newcommand*{\hllab}[2]{%         %     labelled arrow
+  \setlength{\marginparpush}{0pt}%
+  \setlength{\marginparsep}{#1}%
+  \marginpar{\hfill{\arrowfont #2}$\rightarrow$}}
+\newcommand*{\Hllab}[2]{%         %     labelled double arrow
+  \setlength{\marginparpush}{0pt}%
+  \setlength{\marginparsep}{#1}%
+  \marginpar{\hfill{\arrowfont #2}$\Rightarrow$}}
+\newcommand*{\texthllab}[1]{%      %    labelled arrow in text
+  {\arrowfont #1}$\rightarrow$}
+\newcommand*{\textHllab}[1]{%      %    labelled double arrow in text
+  {\arrowfont #1}$\Rightarrow$}
+\newcommand*{\margmark}[1]{%            
+  \setlength{\marginparpush}{0pt}%      arbitrary margin mark
+  \setlength{\marginparsep}{\arrowsep}\marginpar{\hfill #1}}
+
+% to allow line numbering to be resumed
+\newcounter{endofconv}
+\newcommand{\convtocont}{\setcounter{endofconv}{\thelinenumber}}
+\newcommand{\convcont}{\linenumbers[\theendofconv]}
+
+% old, deprecated commands - you shouldn't use these any more!
+\newcommand{\labhl}[1]{%
+  \marginpar{\hspace*{\arrowsep}\arrowfont{#1}$\rightarrow$}}
+\newcommand{\textlabhl}[1]{{\arrowfont #1}$\rightarrow$}
+\newcommand*{\turnnonum}[1]% unnumbered turns
+{\convfont\item[\hspace*{\convindent}#1]\nolinenumbers}
+
+\endinput
+
+% End of file `convtran.sty'.
