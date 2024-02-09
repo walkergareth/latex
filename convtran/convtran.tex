@@ -85,7 +85,7 @@ Note that the overlapping talk has to be aligned manually using spaces
 (\verb!~!) or commands like \verb!\hspace{3em}! or \verb!\hphantom{Oh }!.
 
 \subsection{Numbered examples}
-You can use a package like \verb!gb4e! to provide numbered examples:
+You can use a package like \verb!gb4e! to provide numbered examples (note that \verb!gb4e.sty! has to be loaded after \verb!convtran!):
 \begin{verbatim}
 (...)
 \usepackage{gb4e}
@@ -443,6 +443,11 @@ arrow a bit closer to the text.  Note that you can use the
 \item If you use the \verb!\linelabel! or \verb!\lab! commands in a
   minipage (even if you don't refer to those lines), references later
   in the document seem to get messed up.
+\item \verb!gb4e.sty! has to be loaded after \verb!convtran!.
+\item \verb!convtran! loads \verb!lineno!. Loading \verb!csquotes!
+  before \verb!convtran! may lead to the warning message
+  \verb!Command \@parboxrestore has changed.!. See
+  \href{https://tex.stackexchange.com/a/447159}{https://tex.stackexchange.com/a/447159}.
 
 \end{itemize}
 
