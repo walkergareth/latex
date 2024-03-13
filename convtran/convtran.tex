@@ -187,8 +187,8 @@ have a preamble which includes this:
 \setarrowplace{0cm}
 \setconvindent{2cm}
 \setconvlabelwidth{3cm}
-\setconvfont{\sf}
-\setarrowfont{\tt}
+\setconvfont{\sf\large}
+\setarrowfont{\tt\Large}
 \end{verbatim}
 If you wanted to change some of the parameters for a smaller number of
 cases (and therefore didn't want to change the defaults for the entire
@@ -199,10 +199,10 @@ parameters only for that particular case.
   \setlinenoplace{1cm}
   \setarrowplace{0cm}
   \setconvindent{2cm}
-  \setconvfont{\sf}
-  \setarrowfont{\tt}
+  \setconvfont{\sf\large}
+  \setarrowfont{\tt\large}
   \turn{Bob:} Hello Jim. \hl
-  \turn{Jim:} Hello Bob. \hllab{2.8cm}{A}
+  \turn{Jim:} Hello Bob. \hllab{-0.5cm}{A}
 \end{convtran}
 \end{verbatim}
 Both produce this (which is ugly, but it shows the features):
@@ -213,7 +213,7 @@ Both produce this (which is ugly, but it shows the features):
   \setconvfont{\sf}
   \setarrowfont{\tt}
   \turn{Bob:} Hello Jim. \hl
-  \turn{Jim:} Hello Bob. \hllab{2.8cm}{A}
+  \turn{Jim:} Hello Bob. \hllab{-0.5cm}{A}
 \end{convtran}
 
 You should bear in mind that trial-and-error will almost certainly
