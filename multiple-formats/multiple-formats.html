@@ -1,0 +1,307 @@
+<!DOCTYPE html> 
+<html lang='en-US' xml:lang='en-US'> 
+<head><title>Multiple output formats from the same LaTeX source</title> 
+<meta charset='utf-8' /> 
+<meta content='TeX4ht (https://tug.org/tex4ht/)' name='generator' /> 
+<meta content='width=device-width,initial-scale=1' name='viewport' /> 
+<link href='multiple-formats.css' rel='stylesheet' type='text/css' /> 
+<meta content='multiple-formats.tex' name='src' /> 
+</head><body>
+   <div class='maketitle'>
+                                                                                       
+                                                                                       
+                                                                                       
+                                                                                       
+
+<h2 class='titleHead'>Multiple output formats from the same
+LaTeX source<span class='thank-mark'><a href='#tk-1'>∗</a></span></h2>
+ <div class='author'><span class='cmr-12x-x-120'>Gareth Walker</span></div><br />
+<div class='date'><span class='cmr-12x-x-120'>November 28, 2024</span></div>
+   <div class='thanks'><br /><a id='tk-1'></a><span class='thank-mark'><span class='tcrm-1200'>∗</span></span>The information in this document is offered in good faith and I hope that others find it
+helpful. Much of it has come, directly or indirectly, from the author of the make4ht tool, Michal
+Hoftich. I’ve taken math snippets from  <a href='https://euclid.colorado.edu/~hilljb/latex/intro.to.latex.tex'>this intro to writing math with LaTeX</a>. There are
+absolutely no guarantees as to whether, and how well, these tools will work in your case. I am
+not the author of any of the tools referred to in this document. Corrections and improvements
+to this document are welcome.</div></div>
+   <h3 class='likesectionHead' id='contents'><a id='x1-1000'></a>Contents</h3>
+   <div class='tableofcontents'>
+   <span class='sectionToc'>1 <a href='#introduction' id='QQ2-1-2'>Introduction</a></span>
+<br />   <span class='sectionToc'>2 <a href='#the-main-tool-makeht' id='QQ2-1-3'>The main tool: make4ht</a></span>
+<br />   <span class='subsectionToc'>2.1 <a href='#getting-html-output' id='QQ2-1-4'>Getting HTML output</a></span>
+<br />   <span class='subsectionToc'>2.2 <a href='#getting-libreoffice-odt-output' id='QQ2-1-5'>Getting LibreOffice (ODT) output</a></span>
+<br />   <span class='subsectionToc'>2.3 <a href='#getting-microsoft-word-docx-output' id='QQ2-1-6'>Getting Microsoft Word (DOCX) output</a></span>
+<br />   <span class='subsectionToc'>2.4 <a href='#putting-it-all-together' id='QQ2-1-7'>Putting it all together</a></span>
+<br />   <span class='sectionToc'>3 <a href='#other-things' id='QQ2-1-8'>Other things</a></span>
+<br />   <span class='subsectionToc'>3.1 <a href='#graphics' id='QQ2-1-9'>Graphics</a></span>
+<br />   <span class='subsectionToc'>3.2 <a href='#math' id='QQ2-1-10'>Math</a></span>
+<br />   <span class='subsectionToc'>3.3 <a href='#tables' id='QQ2-1-11'>Tables</a></span>
+<br />   <span class='subsectionToc'>3.4 <a href='#phonetic-symbols' id='QQ2-1-13'>Phonetic symbols</a></span>
+<br />   <span class='subsectionToc'>3.5 <a href='#syntax-trees' id='QQ2-1-14'>Syntax trees</a></span>
+<br />   <span class='subsectionToc'>3.6 <a href='#heading-levels' id='QQ2-1-15'>Heading levels</a></span>
+<br />   <span class='subsectionToc'>3.7 <a href='#creating-zip-files-of-html-versions' id='QQ2-1-16'>Creating ZIP files of HTML versions</a></span>
+<br />   <span class='subsectionToc'>3.8 <a href='#putting-html-versions-of-documents-on-blackboard' id='QQ2-1-17'>Putting HTML versions of documents on Blackboard</a></span>
+   </div>
+<!-- l. 34 --><p class='noindent'>
+</p>
+   <h3 class='sectionHead' id='introduction'><span class='titlemark'>1   </span> <a id='x1-20001'></a>Introduction</h3>
+                                                                                       
+                                                                                       
+<!-- l. 36 --><p class='noindent'>There are times when it can be useful to use the same LaTeX source code and produce multiple
+output formats. One such case is where you are preparing materials for students and you want
+them to have, for example, a PDF ‘reference’ version but would also like them to have the same
+materials in HTML format and in formats they can use in LibreOffice (ODT) and in Microsoft
+Word (DOCX). This document gives you some tips on how to achieve that. If you are
+currently looking at an output file in PDF, HTML, ODT, or DOCX format <span class='cmbx-12'>these all
+originated from the same single LaTeX source file</span>. So as well as documenting the
+process of conversion, this file functions as an example of the output which can be
+produced.
+</p><!-- l. 48 --><p class='noindent'>
+</p>
+   <h3 class='sectionHead' id='the-main-tool-makeht'><span class='titlemark'>2   </span> <a id='x1-30002'></a>The main tool: make4ht</h3>
+<!-- l. 50 --><p class='noindent'>The main tool in the conversion process described here is Michal Hoftich’s excellent  <a href='https://ctan.org/pkg/make4ht'>make4ht</a>
+tool (and the related  <a href='https://ctan.org/pkg/tex4ht'>tex4ht</a> package). So, install those things if you don’t already have them.
+There is  <a href='https://www.kodymirus.cz/tex4ht-doc/tex4ht-doc.html'>quite extensive documentation</a> if you need it, but this document should help you get
+started.
+</p><!-- l. 58 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='getting-html-output'><span class='titlemark'>2.1   </span> <a id='x1-40002.1'></a>Getting HTML output</h4>
+<!-- l. 60 --><p class='noindent'>This is as simple as doing this from the command line:
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-1'>
+make4ht multiple-formats.tex
+</pre>
+<!-- l. 63 --><p class='nopar'>
+</p><!-- l. 65 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='getting-libreoffice-odt-output'><span class='titlemark'>2.2   </span> <a id='x1-50002.2'></a>Getting LibreOffice (ODT) output</h4>
+<!-- l. 67 --><p class='noindent'>You can do this from the command line:
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-2'>
+make4ht -f odt multiple-formats.tex
+</pre>
+<!-- l. 70 --><p class='nopar'>
+</p><!-- l. 72 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='getting-microsoft-word-docx-output'><span class='titlemark'>2.3   </span> <a id='x1-60002.3'></a>Getting Microsoft Word (DOCX) output</h4>
+<!-- l. 74 --><p class='noindent'>Once you have the ODT file, you can open the file in LibreOffice and use “Save as...” to save
+the file in DOCX format. If you are able to call LibreOffice from the command line
+(terminal) on your system, you may be able to do the conversion that way, something like
+this:
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-3'>
+libreoffice7.5 --convert-to docx multiple-formats.odt
+</pre>
+<!-- l. 80 --><p class='nopar'>
+</p><!-- l. 82 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='putting-it-all-together'><span class='titlemark'>2.4   </span> <a id='x1-70002.4'></a>Putting it all together</h4>
+<!-- l. 84 --><p class='noindent'>Depending on your system, you may be able to put all these steps together in a shell script so
+that running that shell script on a file generates some or all of the output formats (PDF,
+HTML, ODT, DOCX). On my system (Ubuntu Linux) I can have a bash script like
+this:
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-4'>
+#!/bin/bash
+fileName=$(basename "$1" | cut -d. -f1)
+make4ht $fileName
+make4ht -f odt $fileName
+libreoffice7.5 --convert-to docx $fileName.odt
+</pre>
+<!-- l. 94 --><p class='nopar'> If I save this as <span class='obeylines-h'><code class='verb'>makeMultipleFormats</code></span>, make that file executable, and possibly put it
+somewhere in my system’s path, I can then run this command:
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-5'>
+makeMultipleFormats multiple-formats.tex
+</pre>
+<!-- l. 100 --><p class='nopar'> That single command gets me PDF, HTML, ODT and DOCX versions of the same
+LaTeX source, all at the same time. Nice!
+</p><!-- l. 104 --><p class='noindent'>
+</p>
+   <h3 class='sectionHead' id='other-things'><span class='titlemark'>3   </span> <a id='x1-80003'></a>Other things</h3>
+<!-- l. 106 --><p class='noindent'>This section contains some advice on some of the situations which might crop up, and some
+suggestions of what to do.
+</p><!-- l. 109 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='graphics'><span class='titlemark'>3.1   </span> <a id='x1-90003.1'></a>Graphics</h4>
+<!-- l. 111 --><p class='noindent'>You can include graphics like this, optionally specifying a size and alt-text to describe the
+image:
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-6'>
+\includegraphics[alt={a colour picture of a tiger},width=3cm]{tiger}
+</pre>
+<!-- l. 115 --><p class='nopar'> <img alt='a colour picture of a tiger' height='89' src='tiger-.png' width='85' /><br class='newline' />The alt-text will be preserved in the HTML and ODT versions, but seems to be lost when
+converting to DOCX from LibreOffice.
+</p><!-- l. 120 --><p class='indent'>   To get the image size you want in the ODT and DOCX file, you may need to do a bit of
+work. One thing you can do is use the <span class='obeylines-h'><code class='verb'>ebb</code></span> command from the command line to create a special
+file which contains the dimensions of the graphics, e.g.
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-7'>
+  ebb -x tiger.pdf
+</pre>
+<!-- l. 126 --><p class='nopar'> (This works on other types of graphics as well, not just PDF.) There is more detail on this on
+<a href='https://tex.stackexchange.com/a/568853/110494'>StackExchange</a>.
+</p><!-- l. 131 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='math'><span class='titlemark'>3.2   </span> <a id='x1-100003.2'></a>Math</h4>
+<!-- l. 133 --><p class='noindent'>Numbered equations such as
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-8'>
+\begin{equation}
+\sum_{k=1}^5(k^2+2) = (1^2+2)+(2^2+2)+(3^2+2)+(4^2+2)+(5^2+2)
+\end{equation}
+</pre>
+<!-- l. 138 --><p class='nopar'> can be converted to graphics:
+</p>
+   <table class='equation'><tr><td>
+   <div class='math-display'>
+<img alt='∑5
+   (k2 + 2) = (12 + 2) + (22 + 2) + (32 + 2) + (42 + 2) + (52 + 2)
+k=1
+' class='math-display' src='multiple-formats0x.png' /><a id='x1-10001r1'></a></div>
+   </td><td class='equation-label'>(1)</td></tr></table>
+<!-- l. 142 --><p class='nopar'>The graphics will have alt-text generated automatically.
+</p><!-- l. 145 --><p class='indent'>   Inline math (e.g. <span class='obeylines-h'><code class='verb'>$h(x)=e^x$</code></span>) can appear in the text: <span class='cmmi-12'>h</span>(<span class='cmmi-12'>x</span>) = <span class='cmmi-12'>e</span><sup><span class='cmmi-8'>x</span></sup>. There are options to
+convert math into other accessible formats, including MathML and MathJax: see the
+<a href='https://www.kodymirus.cz/tex4ht-doc/BasicTutorial.html#math-options'>documentation</a>.
+</p><!-- l. 150 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='tables'><span class='titlemark'>3.3   </span> <a id='x1-110003.3'></a>Tables</h4>
+<!-- l. 152 --><p class='noindent'>Tables are converted. </p><div class='table'>
+                                                                                       
+                                                                                       
+<!-- l. 153 --><p class='indent' id='a-table'>   <a id='x1-11001r1'></a></p><figure class='float'>
+                                                                                       
+                                                                                       
+<div class='tabular'> <table class='tabular' id='TBL-2'><colgroup id='TBL-2-1g'><col id='TBL-2-1' /></colgroup><colgroup id='TBL-2-2g'><col id='TBL-2-2' /><col id='TBL-2-3' /></colgroup><tr id='TBL-2-1-' style='vertical-align:baseline;'><td class='td11' id='TBL-2-1-1' style='white-space:nowrap; text-align:left;'> a </td><td class='td11' id='TBL-2-1-2' style='white-space:nowrap; text-align:left;'> b  </td><td class='td11' id='TBL-2-1-3' style='white-space:nowrap; text-align:left;'> c  </td>
+</tr><tr class='hline'><td></td><td></td><td></td></tr><tr id='TBL-2-2-' style='vertical-align:baseline;'><td class='td11' id='TBL-2-2-1' style='white-space:nowrap; text-align:left;'> 1  </td><td class='td11' id='TBL-2-2-2' style='white-space:nowrap; text-align:left;'> 2  </td><td class='td11' id='TBL-2-2-3' style='white-space:nowrap; text-align:left;'> 3  </td>
+</tr><tr id='TBL-2-3-' style='vertical-align:baseline;'><td class='td11' id='TBL-2-3-1' style='white-space:nowrap; text-align:left;'> 2  </td><td class='td11' id='TBL-2-3-2' style='white-space:nowrap; text-align:left;'> 3  </td><td class='td11' id='TBL-2-3-3' style='white-space:nowrap; text-align:left;'> 4  </td></tr></table>                                                                     </div>
+<figcaption class='caption'><span class='id'>Table 1: </span><span class='content'>A table</span></figcaption><!-- tex4ht:label?: x1-11001r1  -->
+                                                                                       
+                                                                                       
+   </figure>
+   </div>
+   <h4 class='subsectionHead' id='phonetic-symbols'><span class='titlemark'>3.4   </span> <a id='x1-120003.4'></a>Phonetic symbols</h4>
+<!-- l. 165 --><p class='noindent'>Phonetic symbols seem to convert fine when done something like this:
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-9'>
+\documentclass{article}
+\usepackage{fontspec}
+\newfontfamily\ipafont{Doulos SIL}
+\newcommand\ipa[1]{{\ipafont #1}}
+\begin{document}
+This is a test
+\ipa{[(input unicode IPA here)]}
+This is a test
+\end{document}
+</pre>
+<!-- l. 176 --><p class='nopar'> Since you need X  E LaTeX or LuaTeX to use the <span class='obeylines-h'><code class='verb'>fontspec</code></span> package, to do the conversion to
+conversion you need e.g.
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-10'>
+make4ht -x file.tex
+</pre>
+<!-- l. 181 --><p class='nopar'> and for ODT output e.g.
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-11'>
+make4ht -x -f odt file.tex
+</pre>
+<!-- l. 185 --><p class='nopar'> A DOCX file can be created from the ODT file using LibreOffice in the same way as described
+in section <a href='#getting-microsoft-word-docx-output'>2.3<!-- tex4ht:ref: msword  --></a>.
+</p><!-- l. 189 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='syntax-trees'><span class='titlemark'>3.5   </span> <a id='x1-130003.5'></a>Syntax trees</h4>
+<!-- l. 191 --><p class='noindent'>This is a document showing a syntax tree using the qtree package:
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-12'>
+\documentclass{article}
+\usepackage{qtree}
+\usepackage{ulem}
+\begin{document}
+This is a tree.
+\Tree[.TP\qroof{Valentine}.DP\textit{\begin{scriptsize}i\end{scriptsize}}
+[.T’ [.T [.V be ] [.T -ed ]] [.VP [.V’ [.\sout{V} ][.VP
+[.\sout{DP}\textit{\begin{scriptsize}i\end{scriptsize}} ][.V’ [.V
+writing ] \qroof{a book}.DP ]]]]]]
+\end{document}
+</pre>
+<!-- l. 203 --><p class='nopar'> The conversion to HTML seems robust, e.g.
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-13'>
+make4ht tree.tex "svg"
+</pre>
+<!-- l. 207 --><p class='nopar'> The “svg” switch to get graphics in the SVG format seems to be required in order to preserve
+the lines in the graphic representing branches.
+</p><!-- l. 212 --><p class='indent'>   To create a ODT or DOCX version, you can open the HTML file in LibreOffice, then save
+it in those other formats. The size of the graphics in the final files may need to be
+adjusted.
+</p><!-- l. 216 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='heading-levels'><span class='titlemark'>3.6   </span> <a id='x1-140003.6'></a>Heading levels</h4>
+<!-- l. 218 --><p class='noindent'>You can change the style formatting to start at e.g. “Heading 1” by using a configuration file
+like this:
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-14'>
+\Preamble{xhtml}
+\Configure{Heading-2}{Heading 1}
+\Configure{Heading-3}{Heading 2}
+\Configure{Heading-4}{Heading 3}
+\begin{document}
+\EndPreamble
+</pre>
+<!-- l. 227 --><p class='nopar'> If you save the configuration file as <span class='obeylines-h'><code class='verb'>heading.cfg</code></span> you can then do e.g.
+                                                                                       
+                                                                                       
+</p>
+   <pre class='verbatim' id='verbatim-15'>
+make4ht -f odt -c heading.cfg file.tex
+</pre>
+<!-- l. 231 --><p class='nopar'>
+</p><!-- l. 233 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='creating-zip-files-of-html-versions'><span class='titlemark'>3.7   </span> <a id='x1-150003.7'></a>Creating ZIP files of HTML versions</h4>
+<!-- l. 235 --><p class='noindent'>There is some information about this on  <a href='https://tex.stackexchange.com/q/656496/110494'>StackExchange</a>.
+</p><!-- l. 237 --><p class='noindent'>
+</p>
+   <h4 class='subsectionHead' id='putting-html-versions-of-documents-on-blackboard'><span class='titlemark'>3.8   </span> <a id='x1-160003.8'></a>Putting HTML versions of documents on Blackboard</h4>
+<!-- l. 239 --><p class='noindent'>Make a ZIP file of all the files you need to make available (e.g. the HTML file, CSS file, any
+graphics). Upload your ZIP files to the content collection as a package, so that it unzips once
+uploaded. You then have to give all the files the correct permissions. In the content collection,
+find the folder you want to make available. Click on the ‘permissions’ icon for that folder. That
+will take you to a list of who can access the contents of the folder, and what they can do with
+the (e.g. read, write, modify, manage). Click “Select Specific Users By Place”, then “Course”.
+Choose the course (module) taken by the students to whom you want to give access, check the
+box(es), scroll to the very bottom to “select roles” and select e.g. “Student” or “All
+course users”, check the permissions you will give (probably just “Read”), then click
+“Submit”.
+</p>
+    
+</body> 
+</html>
