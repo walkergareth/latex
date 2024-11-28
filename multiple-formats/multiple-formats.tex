@@ -88,6 +88,7 @@ DOCX). On my system (Ubuntu Linux) I can have a bash script like this:
 \begin{verbatim}
 #!/bin/bash
 fileName=$(basename "$1" | cut -d. -f1)
+latexmk $fileName
 make4ht $fileName
 make4ht -f odt $fileName
 libreoffice7.5 --convert-to docx $fileName.odt
