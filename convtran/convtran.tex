@@ -1,5 +1,5 @@
 %% convtran.tex
-%% Copyright 2023 Gareth Walker
+%% Copyright 2025 Gareth Walker
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -21,7 +21,20 @@
 \setlength{\columnseprule}{0.5pt}
 \usepackage{hyperref}
 \usepackage[margin=2.5cm]{geometry}
+\usepackage{savesym}
 \usepackage{convtran}
+\savesymbol{hl}
+\usepackage{soul}
+\restoresymbol{SOUL}{hl}
+\usepackage{xcolor}
+
+\newcommand{\ctext}[3][RGB]{%
+  \begingroup
+  \definecolor{hlcolor}{#1}{#2}\sethlcolor{hlcolor}%
+  \SOULhl{#3}%
+  \endgroup
+}
+
 \begin{document}
 \title{convtran.sty}
 \author{Gareth Walker}
@@ -85,7 +98,7 @@ Note that the overlapping talk has to be aligned manually using spaces
 (\verb!~!) or commands like \verb!\hspace{3em}! or \verb!\hphantom{Oh }!.
 
 \subsection{Numbered examples}
-You can use a package like \verb!gb4e! to provide numbered examples (note that \verb!gb4e.sty! has to be loaded after \verb!convtran!):
+You can use a package like \verb!gb4e! to provide numbered examples (note that \verb!gb4e! has to be loaded after \verb!convtran!):
 \begin{verbatim}
 (...)
 \usepackage{gb4e}
@@ -404,6 +417,49 @@ The \verb!\vspace*{-5pt}! command isn't essential, but it does put the
 arrow a bit closer to the text.  Note that you can use the
 \verb!\ref{}! command inside \verb!\figlab! to refer to a figure.
 
+\section{Highlighting transcriptions with coloured boxes}
+\label{colbox}
+
+Sometimes you might want to highlight a bit of a transcription with a
+coloured box.  For this we can adopt a method described on
+\href{https://tex.stackexchange.com/a/312583/110494}{StackExchange}
+using the \verb!soul! package, to produce something like this:
+\begin{convtran}
+  \turn{A:} this is some speech this is some speech
+  \ctext[RGB]{192,192,192}{this is some speech this is
+    some speech this is some speech} this is some speech
+\end{convtran}
+This is a useful method as the box doesn't introduce space around the
+highlighted text (helping to preserve alignment in transcriptions) and
+the highlighted text breaks automatically across lines. One issue is that
+\verb!soul! and \verb!convtran! both define the command \verb!\hl! so
+we have to take some extra steps when loading the packages in the preamble:
+\begin{verbatim}
+\usepackage{savesym}
+\usepackage{convtran}
+\savesymbol{hl}
+\usepackage{soul}
+\restoresymbol{SOUL}{hl}
+\end{verbatim}
+And we can define a \verb!\ctext! command in the preamble like this:
+\begin{verbatim}
+\newcommand{\ctext}[3][RGB]{%
+  \begingroup
+  \definecolor{hlcolor}{#1}{#2}\sethlcolor{hlcolor}%
+  \SOULhl{#3}%
+  \endgroup
+}
+\end{verbatim}
+Then the code for transcription with the highlighted portion looks
+like this:
+\begin{verbatim}
+\begin{convtran}
+  \turn{A:} this is some speech this is some speech
+  \ctext[RGB]{192,192,192}{this is some speech this is
+    some speech this is some speech} this is some speech
+\end{convtran}
+\end{verbatim}
+
 \section{Known problems}
 
 \begin{itemize}
@@ -443,12 +499,12 @@ arrow a bit closer to the text.  Note that you can use the
 \item If you use the \verb!\linelabel! or \verb!\lab! commands in a
   minipage (even if you don't refer to those lines), references later
   in the document seem to get messed up.
-\item \verb!gb4e.sty! has to be loaded after \verb!convtran!.
+\item \verb!gb4e! has to be loaded after \verb!convtran!.
 \item \verb!convtran! loads \verb!lineno!. Loading \verb!csquotes!
   before \verb!convtran! may lead to the warning message
   \verb!Command \@parboxrestore has changed.!. See
   \href{https://tex.stackexchange.com/a/447159}{https://tex.stackexchange.com/a/447159}.
-
+\item \verb!soul! and \verb!convtran! both define the command \verb!\hl!: see section~\ref{colbox} for a workaround.
 \end{itemize}
 
 \end{document}
